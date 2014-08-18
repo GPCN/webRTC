@@ -1,0 +1,49 @@
+<html>
+
+<head>
+  <title>WebSocket Tester</title>
+  <script language="javascript" type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+  <script language="javascript" type="text/javascript">
+    var ws = new WebSocket('ws://html5rocks.websocket.org/echo'); 
+ws.onopen = function() { 
+    // called when connection is opened 
+	ws.send('some data'); 
+}; 
+ws.onerror = function(e) { 
+    // called in case of error, when connection is broken in example 
+}; 
+ws.onclose = function() { 
+    // called when connexion is closed 
+}; 
+ws.onmessage = function(msg) { 
+    // called when the server sends a message to the client. 
+    // msg.data contains the message. 
+	console.log("lav");
+}; 
+// Here is how to send some data to the server 
+
+// To close the socket:
+//ws.close();
+
+    
+  </script>
+</head>
+
+<body>
+
+  <h2>WebSocket Tester</h2>
+  Target:
+  <input type="text" id="target" value="" />
+  <br />
+  <button id="connect">Connect</button>
+  <button id="disconnect">Disconnect</button>
+  <br />
+  <br />Message:
+  <input type="text" id="message" value="" />
+  <button id="send">Send</button>
+  <br />
+  <br />Output:
+  <br /> <pre><div id="output"></div></pre>
+
+</body>
+</html>
