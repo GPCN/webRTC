@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<!-- Mirrored from meetings.io/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 07 Aug 2014 04:12:33 GMT -->
+<head lang="en">
+	<meta charset="utf-8">
+	<title>Meetings.io</title>
+	<meta name="description" content="Simple online meetings">
+    <meta name="author" content="Meetings.io 2013">
+	
+
+	<!-- CSS styles  -->
+	<link type="text/css" href="all.css" media="all" rel="stylesheet">
+	<link rel="stylesheet" href="bootstrap.min.css">
+	<link rel="stylesheet" href="css/font-awesome.css">
+	
+	
+	
+	<script src="utils.js"></script>
+	<script src="jquery-1.11.1.js"></script>
+	<script src="pubnub.js"> </script>
+	<script src="DataChannel.js"> </script>
+	<script src="HopanChannel.js"> </script>
+    
+    <!-- Icons -->
+	<!-- <link rel="shortcut icon" href="https://oi.meetings.io/ico/favicon.ico?cache=y2013m04d29">
+	<link rel="apple-touch-icon" href="../oi.meetings.io/ico/ico5748fe.png?cache=y2013m04d29">
+    <link rel="apple-touch-icon" sizes="72x72" href="../oi.meetings.io/ico/ico7248fe.png?cache=y2013m04d29">
+    <link rel="apple-touch-icon" sizes="114x114" href="../oi.meetings.io/ico/ico11448fe.png?cache=y2013m04d29"> -->
+
+</head>
+<body>
+	<div id="wrapper">
+		<header id="header" class="home">
+			<div class="header-section">
+				<h1 class="logo"><a href="#" style="color:white;text-decoration: none;">Demo WebRTC</a></h1>
+				
+				</ul>
+			</div>
+		</header>
+
+		<div id="main">
+			<div class="gallery-holder">
+				
+				<div class="holder create">
+
+					<section class="gallery-column">
+						<div class="slides">
+							<img title="Meet Face to Face" class="face preview active" src="face-to-face48fe.jpg" width="561" height="423"/>
+						</div>
+					</section>
+
+					<section class="text-column">
+						<h2>Bắt đầu ngay một cuộc họp trực tuyến</h2>
+						<p class="p1">Trao đổi với bạn bè, khách hàng.</p>
+						<p class="p2">Không cần cài đặt phần mềm.</p>
+						<p class="p3">Hoạt động trên Chrome và FireFox.</p>
+						<br/>
+						<p class="p5">Giải pháp Công nghệ 2 hân hạnh tài trợ chương trình này :D</p>
+
+						<div class="launch" onclick="getRoomBtn()">Bắt đầu họp</div>
+
+						<div class="home-helper start"></div>
+
+					</section>
+
+					<nav class="dot-nav">
+						<ul>
+							<li data-item="face" data-name="face-to-face">
+								<div class="item face active" title="Face to Face Meetings"></div>
+							</li>
+<!-- 							<li  data-item="vanity" data-name="vanity">
+								<div class="item vanity" title="Personalized Rooms"></div>
+							</li> -->
+							<li data-item="screen" data-name="screen-sharing">
+								<div class="item screen" title="Screen Sharing"></div>
+							</li>
+							<li data-item="hangouts" data-name="hangouts">
+								<div class="item hangouts" title="Muiliparty Video Conferencing"></div>
+							</li>
+							<li data-item="videos" data-name="play-videos">
+								<div class="item videos" title="Watch Videos Together"></div>
+							</li>
+							<li data-item="chat" data-name="chat">
+								<div class="item chat" title="Group Chat"></div>
+							</li>
+							<li data-item="notes" data-name="notes">
+								<div class="item notes" title="Personal Notes"></div>
+							</li>
+							<li data-item="organizer" data-name="organizer">
+								<div class="item organizer" title="Meeting Organizer"></div>
+							</li>
+						</ul>
+					</nav>
+
+				</div>
+				
+				<div class="holder share">
+
+
+					<div class="holder-content">
+
+						<div class="room-title"></div>
+						<div class="room-close" title="Close" onclick="getBackBtn()">x</div>
+
+						<div class="room-seperator-1"></div>
+
+						<div class="room-menu">
+							<ul>
+								<li class="url-menu"><div class="pickName link"></div><div class="seperator"></div></li>
+								<li class="url-menu"><div class="pickName link select">Room Name</div><div class="seperator"></div></li>
+							</ul>
+						</div>
+
+						<div class="menu-contents">
+
+							<!-- Room URL -->
+							<div class="room-url content">
+								<!-- <div class="options">Show All</div> -->
+								<div class="title">This is your meeting room url:</div>
+								<div class="url">
+									<input class="url-text default" type="text" placeholder="Enter your room's name">
+									<div id="enterRoom" class="big-button" onclick="getCreateRoomBtn()">Enter Room</div>
+								</div>
+								
+								<div class="url-info">
+									<ul>
+										<li class="content-info">- Share this url with the people you want to meet or hang out with.</li>
+										<li class="content-info">- You can use and re-use this room as many times as you want.</li>
+										<li class="content-info">- Invite guests to your room:</li>
+									</ul>
+								</div>
+
+								<div class="invites">
+									<ul>
+										<li><div class="email" title="Invite guests via Email."></div></li>
+										<li><div class="fb" title="Invite guests via Facebook."></div></li>
+										<li><div class="tw" title="Invite guests via Twitter."></div></li>
+									</ul>
+								</div>
+
+							</div>
+
+							<!-- Pick a name room -->
+							<div class="room-pickName content active">
+								<div class="title">Nhập tên của phòng họp</div>
+								<div class="name">
+									<input class="name-text yourRoomName" type="text" placeholder="Enter a room name.."/>
+									<div id="enterRoom" class="big-button" onclick="getCreateRoomBtn()" style="line-height: 33px">Bắt đầu</div>
+								</div>
+								
+								<div class="name-info">
+									<ul>
+										<li class="content-info">- Hãy cho người bạn muốn liên lạc tên phòng của bạn để bắt đầu.</li>
+										<li class="content-info">- Tên phòng không có dấu cách, sử dụng chữ cái, chữ số dấu '.' và '_'.</li>
+										<li class="content-info">- Bạn có thể tham khảo các tên sau đây :</li>
+										<li class="content-info indent">~ elcom</li>
+										<li class="content-info indent">~ GPCN2</li>
+										<li class="content-info indent">~ why_not_me</li>
+										<li class="content-info indent">~ i.have.no.reason</li>
+									</ul>
+								</div>
+							</div>
+
+							<!-- Buttons room -->
+							<div class="room-buttons content">
+								<div class="title">Add a meeting room button to your website:</div>
+
+								<div class="buttons-info">
+									<div class="buttons-info-selectionTop">
+									<p>Select a style&#58;</p>
+										<ul class="organizeOptions">
+											<div class="btnType notSelected">
+												<li class="style buttons-circleButton noColor">
+												<img src="miniButtonLogo.png" alt="">
+												</li>
+											</div>
+											<div class="btnType notSelected"><li class="style buttons-squareButton noColor">
+												<img src="miniButtonLogo.png" alt="">
+											</li></div>
+											<div class="btnType notSelected selected"><li class="style buttons-rectangleButton noColor">
+												<img src="miniButtonLogo.png" alt="">
+												<p class="flavorText">Text Button</p>
+											</li></div>
+										</ul>
+										<div class="buttons-dropDownText">
+											<p>Text&#58;</p>		
+											<select id="buttons-styledSelectChoices">
+												<option value="1">Meeting Room</option>
+												<option value="2">Office Hours</option>
+												<option value="3">Let's Hangout</option>
+												<option value="4">Let's Meet</option>
+												<option value="5">Meet Us</option>
+												<option value="6">Get Help</option>
+												<option value="7">Let's Video Chat</option>
+												<option value="8">Speak To Me</option>
+												<option value="9">Visit My Room</option>
+												<option value="10">Conference Room</option>
+											</select>
+										</div>
+									</div>
+									<div class="buttons-info-selectionBottom">
+									<p>Select a color&#58;</p>
+										<ul class="organizeOptions">
+											<div class="clrBtn notSelected"><li class="buttons-gradient color colorOne"></li></div>
+											<div class="clrBtn notSelected selected"><li class="buttons-gradient color colorTwo"></li></div>
+											<div class="clrBtn notSelected"><li class="buttons-gradient color colorThree"></li></div>
+											<div class="clrBtn notSelected"><li class="buttons-gradient color colorFour"></li></div>
+											<div class="clrBtn notSelected"><li class="buttons-gradient color colorFive"></li></div>
+											<div class="clrBtn notSelected"><li class="buttons-gradient color colorSix"></li></div>
+											<div class="clrBtn notSelected"><li class="buttons-gradient color colorSeven"></li></div>
+											<div class="clrBtn notSelected"><li class="buttons-gradient color colorEight"></li></div>
+											<div class="clrBtn notSelected"><li class="buttons-gradient color colorNine"></li></div>
+										</ul>
+									</div>
+									<div class="buttons-info-codeBoxAndSubmit">
+										<div class="buttons-info-textBox">
+											<p>Copy &amp; paste the code below&#58;</p>
+											<textarea class="buttons-info-buttonCode" readonly="readonly"></textarea>
+										</div>
+										<div class="buttons-info-submit">
+											<p>Test &amp; preview your button&#58;</p>
+											<div class="button-info-preview">
+												<!-- Manifest the preview button here -->
+												<a id="yourButton" class="buttons-needButton buttons-rectangleButton colorTwo" target="_blank">
+													<img class="icon" alt="" src="miniButtonLogo.png">
+													<p class="flavorText">Meeting Room</p>		
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+							<!-- Notification Room -->
+							<div class="room-notifyer content">
+								<p>Temporary For now</p>
+							</div>
+
+							<!-- Embed Room -->
+							<div class="room-embed content">
+								<div class="title">Embed this room within your website:</div>
+								<textarea class="embed-textarea" readonly="readonly"> </textarea>
+								<p class="embed-info">After making your size selection, copy and paste the embeded code above</p>
+								<div class="embed-selections">
+									<div class="embed-selection-section" id="smallSize">
+										<p>800 x 600</p>
+										<div class="embed-shape small"></div>
+									</div>
+
+									<div class="embed-selection-section" id="mediumSize">
+										<p>900 x 700</p>
+										<div class="embed-shape medium"></div>
+									</div>
+
+									<div class="embed-selection-section selected" id="largeSize">
+										<p>1100 x 800</p>
+										<div class="embed-shape large"></div>
+									</div>
+
+									<div class="embed-selection-section custom" id="customSize">
+										<p>Custom</p>
+
+										<p class="embed-sizeAmount"><span class="textSpacing">Width&#58;</span><input type="number" id="customWidth" ></input><span class="units">px</span></p>
+
+										<p class="embed-sizeAmount"><span class="textSpacing">Height&#58;</span><input type="number" id="customHeight" ></input><span class="units">px</span></p>
+
+									</div>
+								</div>
+							</div>
+							
+						</div>
+
+					</div>
+
+
+
+				</div>
+			</div>
+
+
+			<!-- <div class="personal-holder">
+				<div class="top-shader"></div>
+
+				<div class="bottom-shader"></div>
+			</div> -->
+				
+		</div>
+
+		<div id="videos" class="videosContainer">
+			<!-- <button type="button" class="btn btn-primary inputSend" id="addVideoBtn1" style="bottom:0px; z-index:10">Add</button> -->
+		</div>
+
+		<div id="chatWrapper" class="chatContainer">
+			<div id="chatResizer" class="resizer">
+				<div class="dragBar"></div>
+			</div>
+			<div id="chatInnerWrapper" class="chatInnerContainer">
+				<div id="messageWrapper" class="messageWrapper"></div>
+				<div id="inputWrapper" class="inputWrapper">
+					<textarea type="text" id="inputMessage" class="form-control" rows="1"></textarea>
+					
+				</div>
+				<button type="button" class="btn btn-primary inputSend" id="sendBtn">Send</button>
+				
+			</div>
+			
+		</div>
+	</div>
+
+	<footer id="footer">
+		<div class="footer-section">
+			<nav class="footer-menu">
+				<ul>
+					<li><a href="features.html">Features</a></li>
+					<li><a href="help.html">Help</a></li>
+				</ul>
+			</nav>
+			<p>&copy; elcom.com.vn Copyright 2014.</p>
+		</div>
+	</footer>
+
+	<!-- Script Tags -->
+    <script type="text/javascript" src="gui.js"></script>
+	<script type="text/javascript" src="webRTC.js"></script>
+</body>
+
+</html>
