@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="css/datachannel.css">
+	
+	<title>RTCDataChannel</title>
+  </head>
+  <body>
+	<!-- <script src="js/sip-0.6.1.js"></script> -->
+    
+	<div>
+	
+	<textarea rows="4" cols="50" disabled="disabled" id="localMessage"></textarea>
+	<br/>
+	<input id="localInput"></input>
+	<br/>
+	<button id="localSend">Send</button>
+	
+	</div>
+	<hr/>
+	
+	<div>
+	<textarea rows="4" cols="50" disabled="disabled" id="remoteMessage"></textarea>
+	<br/>
+	<input id="remoteInput"></input>
+	<br/>
+	<button id="remoteSend">Send</button>
+	</div>
+	
+	<script src="js/datachannel.js"></script> 
+  </body>
+</html>

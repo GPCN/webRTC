@@ -1,0 +1,9 @@
+body {
+  margin: 0px;
+  padding: 0px;
+}
+ 
+#player1 {
+  width: 20%;
+  height: 20%;
+}
