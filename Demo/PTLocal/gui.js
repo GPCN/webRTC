@@ -41,20 +41,20 @@ window.onload = function()
 		if ($("#chatResizer").attr("collapse"))
 		{
 			var x = 350;
-			$("#chatWrapper").css("left", window.screen.availWidth - x - resizerSize);
+			$("#chatWrapper").css("left", window.innerWidth - x - resizerSize);
 			$("#chatWrapper").css("width", x + resizerSize);
 			$("#chatInnerWrapper").css("width", x);
-			$("#videos").css("width", window.screen.availWidth - x - resizerSize);
+			$("#videos").css("width", window.innerWidth - x - resizerSize);
 			$("#chatResizer").removeAttr("collapse");
 			$("#sendBtn").show();
 		}
 		else
 		{
 			var x = 0;
-			$("#chatWrapper").css("left", window.screen.availWidth - x - resizerSize);
+			$("#chatWrapper").css("left", window.innerWidth - x - resizerSize);
 			$("#chatWrapper").css("width", x + resizerSize);
 			$("#chatInnerWrapper").css("width", x);
-			$("#videos").css("width", window.screen.availWidth - x - resizerSize);
+			$("#videos").css("width", window.innerWidth - x - resizerSize);
 			$("#chatResizer").attr("collapse", true);
 			$("#sendBtn").hide();
 		}
@@ -99,8 +99,6 @@ window.onload = function()
 		console.log("Resize");
 		arrangeVideo();
 	});
-
-	starty();
 }
 
 $(document).ready(function()
@@ -456,9 +454,13 @@ function checkSize()
 setInterval(checkSize, 500);
 
 
+var windowWidth = windowHeight = 0;
 function resizeWindow()
 {
-	//
+	if (windowWidth == window.innerWidth && windowHeight == window.innnerHeight) return;
+	windowWidth = window.innerWidth;
+	windowHeight = window.innnerHeight;
+	
 	if (window.innerWidth < 900)
 	{
 		//console.log("< 900");
@@ -467,6 +469,10 @@ function resizeWindow()
 	}
 	//
 	var chatLeft = window.innerWidth - chatWidth;
+	if ($("#chatResizer").attr("collapse"))
+	{
+		chatLeft = window.innerWidth - resizerSize;
+	}
 	//
 	$("#chatWrapper").css("left", chatLeft);
 	$("#chatWrapper").css("width", window.innerWidth - chatLeft);

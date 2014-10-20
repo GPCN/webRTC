@@ -9994,3 +9994,8 @@ div.button.file-upload #fileSelector{
 {
 	background: rgba(0,0,0,.25);
 }
+
+.LocalVideoContainer 
+{
+	box-shadow: 0px 0px 5px 1px red;
+}

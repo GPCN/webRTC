@@ -4,7 +4,7 @@ console.log("Start Demo");
 // message {type,content}
 
 // Vars
-var channel = new DataChannel();
+var channel = new HopanDataChannel();
 var isConnected = false;
 var peerManager = new PeerManager();
 var createRoom = document.getElementById("createRoom");
@@ -14,6 +14,19 @@ var localStream = null;
 var currentPeer = null;
 var callanswerList = [];
 var avatar = null;
+
+var STUN = {
+    url: 'stun:stun.l.google.com:19302' 
+};
+
+var TURN = {
+    url: 'turn:homeo@turn.bistri.com:80',
+    credential: 'homeo'
+};
+
+var iceServers = {
+   iceServers: [STUN, TURN]
+};
 
 // Check room
 
@@ -25,9 +38,9 @@ function Peer(id) {
     this.id = id;
 	this.nickname = "";
 	this.avatar = null;
-    this.pc = new webkitRTCPeerConnection(null);
+    this.pc = new webkitRTCPeerConnection(iceServers);
 	this.pc.addStream(localStream);
-	//
+	this.startcall = false;
 	//
 	this.gotStream = function(event)
 	{
@@ -57,7 +70,7 @@ function Peer(id) {
 	
 	this.gotOfferDescription = function(des)
 	{
-		//console.log("Got Description", this);
+		console.log("Got Description", des);
 		currentPeer.pc.setLocalDescription(des);
 		currentPeer.sendMessage({type:"description", content: des, state: "offer"});
 		currentPeer = null;
@@ -67,6 +80,7 @@ function Peer(id) {
 	
 	this.gotAnswerDescription = function(des)
 	{
+		console.log("Got Description", des);
 		currentPeer.pc.setLocalDescription(des);
 		currentPeer.sendMessage({type:"description", content: des, state: "answer"});
 		currentPeer = null;
@@ -87,6 +101,7 @@ function Peer(id) {
 		//this.pc.onsignalingstatechange = this.gotStateChange;
 		//this.pc.addStream(localStream);
 		//this.pc.createOffer(this.gotOfferDescription);
+		this.startcall = true;
 		callanswerList[callanswerList.length] = {type:"call", peer : this};
 	}
 	
@@ -100,17 +115,17 @@ function Peer(id) {
 		//this.pc.onsignalingstatechange = this.gotStateChange;
 		//this.pc.addStream(localStream);
 		//this.pc.createAnswer(this.gotAnswerDescription);
+		this.startcall = true;
 		callanswerList[callanswerList.length] = {type:"answer", peer : this};
 	}
 	
 	this.gotMessage = function(message)
 	{
 		// process message
+		//console.log("gotMessage", message);
 		var msg = JSON.parse(message);
 		//
 		if (msg.id && msg.id != channel.userid) return;
-		//
-		//console.log("gotMessage", message);
 		//
 		if (msg.type == "offer")
 		{
@@ -186,6 +201,25 @@ function Peer(id) {
 		chatMessages.scrollTop = chatMessages.scrollHeight;
 	}
 	
+	this.iamoffer = function()
+	{
+		var myid = this.id;
+		console.log("iamoffer");
+		var offerInterval = setInterval(function()
+		{
+			var temp = peerManager.getPeerById(myid);
+			if (!temp || temp.startcall)
+			{
+				clearInterval(offerInterval);
+			}
+			else
+			{
+				temp.sendMessage({type: "offer"});
+				console.log("reoffer");
+			}
+		}, 2000);
+	}
+	
 	this.pc.onaddstream = this.gotStream;
 	this.pc.onicecandidate = this.gotIceCandidate;
 	this.pc.onsignalingstatechange = this.gotStateChange;
@@ -206,7 +240,9 @@ function PeerManager()
 		//
 		if (id > channel.userid)
 		{
+			console.log("offer");
 			temp.sendMessage({type: "offer"});
+			temp.iamoffer();
 		}
 	}
 	
@@ -215,7 +251,6 @@ function PeerManager()
 		removeVideo(id);
 		// 
 		index = this.getPeerIndexById(id);
-		console.log("removePeer", index);
 		if (index != -1)
 		{
 			delete this.peers[index];
@@ -258,6 +293,16 @@ function PeerManager()
 		}
 		
 		return -1;
+	}
+	
+	this.getPeerById = function(id)
+	{
+		for (i = 0; i < this.peers.length; ++i)
+		{
+			if (this.peers[i].id == id) return this.peers[i];
+		}
+		
+		return null;
 	}
 	
 	this.getPeerIndexByPC = function(pc)
@@ -349,27 +394,7 @@ function starty()
 	if (!roomId) return;
 	// Init DataChannel room 
 	// try to open channel
-	var readyStateCheckInterval = setInterval(function() {
-		if (document.readyState == "complete" && localStream) {
-			if (!isConnected) 
-			{
-				channel.open(); 
-				console.log("channel.open");
-			}
-			clearInterval(readyStateCheckInterval);
-		}
-	}, 5000);
-	
-	var readyStateCheckInterval2 = setInterval(function() {
-		if (document.readyState == "complete" && localStream) {
-			if (!isConnected) 
-			{
-				channel.connect();
-				console.log("channel.connect");
-			}
-			clearInterval(readyStateCheckInterval2);
-		}
-	}, 500);
+	channel.start(); 
 }
 
 // Connect to user media
@@ -389,6 +414,8 @@ function gotLocalStream(stream)
 {
 	localStream = stream;
 	addVideo(stream, null);
+	//
+	starty();
 }
 
 
@@ -440,11 +467,12 @@ var callInterval = setInterval(function()
 }, 2000);
 
 window.onbeforeunload = function (e) {
-  e = e || window.event;
-  // For IE and Firefox
-  if (e) {
+	console.log("lav");
     channel.leave();
-  }
+	//var message = 'Did you remember to download your form?';
+	//e.returnValue = message;
+    //return message;
+
 };
 
 
